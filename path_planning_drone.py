@@ -89,7 +89,7 @@ class PathPlanner(Drone):
 		start = current_local
 
 		# Define a goal position in the NEA frame
-		goal = np.array([475, -320 , 200]) #Other open grid positions to try: np.array([588, 456 , 5]) #np.array([588, 456 , 5])#np.array([475, -320 , 5])
+		goal = np.array([475, -320 , 100]) #Other open grid positions to try: np.array([588, 456 , 5]) #np.array([588, 456 , 5])#np.array([475, -320 , 5])
 		
 		# Initialize the RRT planning object
 		planner = RRT(start, obstacles)
@@ -177,7 +177,6 @@ class RRT:
 		iteration = 0
 		while not self.goal_reached(current) and iteration < max_iters:
 			iteration += 1
-			print(iteration)
 			s_sample = self.sample()
 			if iteration % 10 == 0: 
 				s_sample = self.goal
