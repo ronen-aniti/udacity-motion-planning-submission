@@ -56,6 +56,7 @@ class PathPlanner(Drone):
 			elif self.flight_state == States.ARMING:
 				if self.armed:
 					self.plan_path()
+					self.waypoint_transition()
 
 	def plan_path(self):
 		self.flight_state = States.PLANNING
@@ -89,7 +90,7 @@ class PathPlanner(Drone):
 		start = current_local
 
 		# Define a goal position in the NEA frame
-		goal = np.array([475, -320 , 100]) #Other open grid positions to try: np.array([588, 456 , 5]) #np.array([588, 456 , 5])#np.array([475, -320 , 5])
+		goal = np.array([100, 100, 100]) #Other open grid positions to try: np.array([588, 456 , 5]) #np.array([588, 456 , 5])#np.array([475, -320 , 5])
 		
 		# Initialize the RRT planning object
 		planner = RRT(start, obstacles)
@@ -98,13 +99,13 @@ class PathPlanner(Drone):
 		path = planner.run(goal)
 
 		# Convert the RRT output to a list of waypoints
-		waypoints = [[p[0], p[1], p[2], 0] for p in path]
+		waypoints = [[p[0], p[1], p[2], 0] for p in path[1:, :]]
 
 		# Set the waypoints attribute
 		self.waypoints = waypoints 
 
-		# Send waypoints to the simulator
-		self.send_waypoints()
+		# Send waypoints to the simulator (commenting this out since it doesn't seem to work)
+		# self.send_waypoints()
 	
 	def arming_transition(self):
 		self.flight_state = States.ARMING
@@ -219,7 +220,6 @@ class RRT:
 			if not self.collides(current, self.goal):
 				path = np.vstack((path, self.goal))
 			path = self.shorten(path)
-			print(path)
 		
 		# Call the animate method at the end of the run method
 		#self.animate(path)
